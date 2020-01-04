@@ -3,6 +3,8 @@ services:
   manager-nginx:
     image: ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
     restart: always
+    environment:
+      APP_DEBUG: 0
     depends_on:
       - manager-php-fpm
     ports:
@@ -12,3 +14,5 @@ services:
     restart: always
   manager-php-cli:
     image: ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
+    environment:
+      APP_DEBUG: 0
