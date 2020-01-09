@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Model\User\UseCase\Signup\Request;
+declare(strict_types=1);
+
+namespace App\Model\User\UseCase\SignUp\Request;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\Email;
@@ -44,14 +46,13 @@ class Handler
             throw new \DomainException('User already exists.');
         }
 
-        $user = new User(
+        $user = User::signUpByEmail(
             Id::next(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $email,
+            $this->hasher->hash($command->password),
+            $token = $this->tokenizer->generate()
         );
-
-        $token = $this->tokenizer->generate();
-
-        User::signUpByEmail($email, $this->hasher->hash($command->password), $token);
 
         $this->users->add($user);
 

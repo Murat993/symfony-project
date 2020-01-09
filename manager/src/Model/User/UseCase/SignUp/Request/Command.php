@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Model\User\UseCase\Signup\Request;
+declare(strict_types=1);
+
+namespace App\Model\User\UseCase\SignUp\Request;
 
 class Command
 {
