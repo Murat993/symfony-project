@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User
 {
     /**
-     * @var string
+     * @var Id
      */
     private $id;
     /**
@@ -17,7 +17,7 @@ class User
      */
     private $date;
     /**
-     * @var string
+     * @var Email
      */
     private $email;
     /**
@@ -25,7 +25,7 @@ class User
      */
     private $passwordHash;
 
-    public function __construct(string $id, \DateTimeImmutable $date, string $email, string $hash)
+    public function __construct(Id $id, \DateTimeImmutable $date, Email $email, string $hash)
     {
         $this->id = $id;
         $this->date = $date;
@@ -33,7 +33,7 @@ class User
         $this->passwordHash = $hash;
     }
 
-    public function getId(): string
+    public function getId(): Id
     {
         return $this->id;
     }
@@ -43,7 +43,7 @@ class User
         return $this->date;
     }
 
-    public function getEmail(): string
+    public function getEmail(): Email
     {
         return $this->email;
     }

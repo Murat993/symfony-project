@@ -26,7 +26,8 @@
         "symfony/validator": "4.4.*",
         "symfony/web-link": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "ramsey/uuid": "^3.8"
+        "ramsey/uuid": "^3.8",
+        "webmozart/assert": "^1.4"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
