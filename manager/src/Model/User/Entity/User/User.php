@@ -45,11 +45,16 @@ class User
      * @var ResetToken|null
      */
     private $resetToken;
+    /**
+     * @var Role
+     */
+    private $role;
 
     private function __construct(Id $id, \DateTimeImmutable $date)
     {
         $this->id = $id;
         $this->date = $date;
+        $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
@@ -107,6 +112,14 @@ class User
         $this->resetToken = null;
     }
 
+    public function changeRole(Role $role): void
+    {
+        if ($this->role->isEqual($role)) {
+            throw new \DomainException('Role is already same.');
+        }
+        $this->role = $role;
+    }
+
     public function isNew(): bool
     {
         return $this->status === self::STATUS_NEW;
@@ -158,5 +171,10 @@ class User
     public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
     }
 }
