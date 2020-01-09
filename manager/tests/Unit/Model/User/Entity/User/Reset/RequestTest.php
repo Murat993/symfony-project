@@ -8,6 +8,7 @@ use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\ResetToken;
 use App\Model\User\Entity\User\User;
+use App\Tests\Builder\User\UserBuilder;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
@@ -17,35 +18,16 @@ class RequestTest extends TestCase
     {
         $now = new DateTimeImmutable();
         $token = new ResetToken('token', $now->modify('+1 day'));
-        $user = $this->buildSignedUpByEmailUser();
+        $user = (new UserBuilder())->viaEmail()->build();
         $user->requestPasswordReset($token, $now);
         self::assertNotNull($user->getResetToken());
-    }
-
-    private function buildSignedUpByEmailUser(): User
-    {
-        $user = $this->buildUser();
-        $user->signUpByEmail(
-            new Email('test@app.test'),
-            'hash',
-            $token = 'token'
-        );
-        return $user;
-    }
-
-    private function buildUser(): User
-    {
-        return new User(
-            Id::next(),
-            new DateTimeImmutable()
-        );
     }
 
     public function testAlready(): void
     {
         $now = new DateTimeImmutable();
         $token = new ResetToken('token', $now->modify('+1 day'));
-        $user = $this->buildSignedUpByEmailUser();
+        $user = (new UserBuilder())->viaEmail()->build();
         $user->requestPasswordReset($token, $now);
         $this->expectExceptionMessage('Resetting is already requested.');
         $user->requestPasswordReset($token, $now);
@@ -54,7 +36,7 @@ class RequestTest extends TestCase
     public function testExpired(): void
     {
         $now = new DateTimeImmutable();
-        $user = $this->buildSignedUpByEmailUser();
+        $user = (new UserBuilder())->viaEmail()->build();
         $token1 = new ResetToken('token', $now->modify('+1 day'));
         $user->requestPasswordReset($token1, $now);
         self::assertEquals($token1, $user->getResetToken());
@@ -67,7 +49,7 @@ class RequestTest extends TestCase
     {
         $now = new DateTimeImmutable();
         $token = new ResetToken('token', $now->modify('+1 day'));
-        $user = $this->buildUser();
+        $user = (new UserBuilder())->viaNetwork()->build();
         $this->expectExceptionMessage('Email is not specified.');
         $user->requestPasswordReset($token, $now);
     }
