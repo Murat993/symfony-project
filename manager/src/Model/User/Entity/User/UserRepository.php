@@ -13,4 +13,6 @@ interface UserRepository
     public function add(User $user): void;
 
     public function hasByNetworkIdentity(string $network, string $identity): bool;
+
+    public function getByEmail(Email $email): User;
 }
