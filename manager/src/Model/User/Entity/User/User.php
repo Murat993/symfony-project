@@ -39,7 +39,7 @@ class User
     private $email;
     /**
      * @var string|null
-     *
+     * @ORM\Column(type="string", name="password_hash", nullable=true)
      */
     private $passwordHash;
     /**
@@ -75,6 +75,16 @@ class User
         $this->date = $date;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
+    }
+
+    public function confirmSignUp(): void
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('User is already confirmed.');
+        }
+
+        $this->status = self::STATUS_ACTIVE;
+        $this->confirmToken = null;
     }
 
     public static function signUpByEmail(Id $id, \DateTimeImmutable $date, Email $email, string $hash, string $token): self
