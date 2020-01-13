@@ -57,11 +57,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        // Load / create our user however you need.
-        // You can do this by calling the user provider, or with custom logic here.
         $user = $userProvider->loadUserByUsername($credentials['email']);
         if (!$user) {
-            // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
         return $user;
@@ -69,8 +66,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // Check the user's password or other credentials and return true or false
-        // If there are no credentials to check, you can just return true
         throw new Exception('TODO: check the credentials inside ' . __FILE__);
     }
 
@@ -79,7 +74,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
+
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
