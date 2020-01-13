@@ -46,6 +46,9 @@
                             <a href="{{ path('app_logout') }}" class="nav-link">Logout</a>
                         </li>
                     {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Log In</a>
+                        </li>
                         <li>
                             <a href="{{ path('auth.signup') }}" class="nav-link">Sign In</a>
                         </li>
