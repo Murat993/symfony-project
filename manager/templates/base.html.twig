@@ -39,18 +39,18 @@
                         <a class="nav-link" href="{{ path('home') }}">Home</a>
                     </li>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li>
-                            <a href="{{ path('post_index') }}" class="nav-link">Posts</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('home') }}">Home</a>
                         </li>
-                        <li>
-                            <a href="{{ path('app_logout') }}" class="nav-link">Logout</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_logout') }}">Log Out</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_login') }}">Log In</a>
                         </li>
-                        <li>
-                            <a href="{{ path('auth.signup') }}" class="nav-link">Sign In</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('auth.signup') }}">Sign Up</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('auth.reset') }}">Reset</a>
