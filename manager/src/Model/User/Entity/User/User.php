@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User
 {
     private const STATUS_WAIT = 'wait';
-    private const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
     private const STATUS_NEW = 'new';
     /**
      * @var Id
