@@ -39,8 +39,10 @@ class UserFetcher
             ->where('email = :email')
             ->setParameter(':email', $email)
             ->execute();
+
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, AuthView::class);
         $result = $stmt->fetch();
+
         return $result ?: null;
     }
 }

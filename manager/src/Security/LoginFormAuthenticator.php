@@ -3,6 +3,7 @@
 namespace App\Security;
 
 
+use App\Model\User\Service\PasswordHasher;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +25,17 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     private $urlGenerator;
     private $csrfTokenManager;
+    private $hasher;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager)
+    public function __construct(
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        PasswordHasher $hasher
+    )
     {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->hasher = $hasher;
     }
 
     public function supports(Request $request): bool
@@ -64,9 +71,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         return $user;
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
-        throw new Exception('TODO: check the credentials inside ' . __FILE__);
+        return $this->hasher->validate($credentials['password'], $user->getPassword());
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
