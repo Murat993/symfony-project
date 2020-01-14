@@ -1,3 +1,5 @@
+/.ready
+
 ###> symfony/phpunit-bridge ###
 /bin/.phpunit
 /phpunit.xml
