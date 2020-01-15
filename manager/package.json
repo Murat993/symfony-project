@@ -10,7 +10,11 @@
     "dependencies": {
         "bootstrap": "^4.4.1",
         "jquery": "^3.4.1",
-        "popper.js": "^1.16.0"
+        "popper.js": "^1.16.0",
+        "perfect-scrollbar": "^1.4.0",
+        "simple-line-icons": "^2.4.1",
+        "font-awesome": "^4.7.0",
+        "@coreui/coreui": "^2.1.9"
     },
     "devDependencies": {
         "@symfony/webpack-encore": "^0.28.2",
