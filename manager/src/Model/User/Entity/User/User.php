@@ -20,7 +20,6 @@ class User
 {
     private const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
-    private const STATUS_NEW = 'new';
     /**
      * @var Id
      * @ORM\Column(type="user_user_id")
@@ -147,11 +146,6 @@ class User
             throw new \DomainException('Role is already same.');
         }
         $this->role = $role;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->status === self::STATUS_NEW;
     }
 
     public function isWait(): bool
