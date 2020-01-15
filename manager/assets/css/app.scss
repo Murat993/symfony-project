@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/bootstrap";
+
+main {
+    & > .container {
+        padding: 80px 15px 0;
+    }
+
+    & > .container {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
