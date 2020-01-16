@@ -261,6 +261,11 @@ class User
         return $this->newEmailToken;
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     /**
      * @return Network[]
      */
