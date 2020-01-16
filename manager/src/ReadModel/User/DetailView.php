@@ -10,6 +10,8 @@ class DetailView
     public $email;
     public $role;
     public $status;
+    public $first_name;
+    public $last_name;
     /**
      * @var NetworkView[]
      */
