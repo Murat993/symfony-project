@@ -84,7 +84,7 @@ class User
      */
     private $role;
 
-    private function __construct(Id $id, \DateTimeImmutable $date, Name $name)
+    public function __construct(Id $id, \DateTimeImmutable $date, Name $name)
     {
         $this->id = $id;
         $this->date = $date;
