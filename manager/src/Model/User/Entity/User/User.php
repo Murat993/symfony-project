@@ -208,6 +208,12 @@ class User
         throw new \DomainException('Network is not attached.');
     }
 
+    public function edit(Email $email, Name $name): void
+    {
+        $this->name = $name;
+        $this->email = $email;
+    }
+
     public function changeName(Name $name): void
     {
         $this->name = $name;
