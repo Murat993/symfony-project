@@ -18,9 +18,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User
 {
-    private const STATUS_WAIT = 'wait';
+    public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
-    private const STATUS_BLOCKED = 'blocked';
+    public const STATUS_BLOCKED = 'blocked';
     /**
      * @var Id
      * @ORM\Column(type="user_user_id")
