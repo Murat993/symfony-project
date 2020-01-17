@@ -34,10 +34,9 @@ class NameController extends AbstractController
      */
     public function request(Request $request, Name\Handler $handler): Response
     {
-        $user = $this->users->getDetail($this->getUser()->getId());
-        $command = new Name\Command($user->id);
-        $command->firstName = $user->first_name;
-        $command->lastName = $user->last_name;
+        $user = $this->users->get($this->getUser()->getId());
+        $command = Name\Command::fromUser($user);
+
         $form = $this->createForm(Name\Form::class, $command);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
