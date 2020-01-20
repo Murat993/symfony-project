@@ -2,14 +2,12 @@
 
 namespace App\DataFixtures;
 
-
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Name;
-use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
+use App\Model\User\Entity\User\Id;
 use App\Model\User\Service\PasswordHasher;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -34,7 +32,6 @@ class UserFixture extends Fixture
             'facebook',
             '1000000'
         );
-
         $manager->persist($network);
 
         $requested = $this->createSignUpRequestedByEmail(
@@ -42,7 +39,6 @@ class UserFixture extends Fixture
             new Email('requested@app.test'),
             $hash
         );
-
         $manager->persist($requested);
 
         $confirmed = $this->createSignUpConfirmedByEmail(
@@ -50,16 +46,14 @@ class UserFixture extends Fixture
             new Email('user@app.test'),
             $hash
         );
-
         $manager->persist($confirmed);
         $this->setReference(self::REFERENCE_USER, $confirmed);
 
         $admin = $this->createAdminByEmail(
             new Name('James', 'Bond'),
             new Email('admin@app.test'),
-            $hash,
+            $hash
         );
-
         $manager->persist($admin);
         $this->setReference(self::REFERENCE_ADMIN, $admin);
 
