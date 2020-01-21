@@ -214,8 +214,19 @@ class Project
         return $this->departments->toArray();
     }
 
+    public function getMembership(MemberId $id): Membership
+    {
+        foreach ($this->memberships as $membership) {
+            if ($membership->isForMember($id)) {
+                return $membership;
+            }
+        }
+        throw new \DomainException('Member is not found.');
+    }
+
     public function getMemberships()
     {
         return $this->memberships->toArray();
     }
+
 }
