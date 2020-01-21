@@ -6,6 +6,7 @@ namespace App\Model\Work\Entity\Projects\Project;
 
 use App\Model\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Model\Work\Entity\Projects\Role\Id as RoleId;
 
 class ProjectRepository
 {
@@ -28,6 +29,17 @@ class ProjectRepository
             throw new EntityNotFoundException('Project is not found.');
         }
         return $project;
+    }
+
+    public function hasMembersWithRole(RoleId $id): bool
+    {
+        return $this->repo->createQueryBuilder('p')
+                ->select('COUNT(p.id)')
+                ->innerJoin('p.memberships', 'ms')
+                ->innerJoin('ms.roles', 'r')
+                ->andWhere('r.id = :role')
+                ->setParameter(':role', $id->getValue())
+                ->getQuery()->getSingleScalarResult() > 0;
     }
 
     public function add(Project $project): void
