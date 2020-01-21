@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function GuzzleHttp\Promise\all;
 
 /**
  * @Route("/work/projects", name="work.projects")
@@ -35,7 +36,11 @@ class ProjectsController extends AbstractController
      */
     public function index(Request $request, ProjectFetcher $fetcher): Response
     {
-        $filter = new Filter\Filter();
+        if ($this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
+            $filter = Filter\Filter::all();
+        } else {
+            $filter = Filter\Filter::forMember($this->getUser()->getId());
+        }
 
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
