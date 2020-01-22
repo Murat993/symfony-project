@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\SignUp;
 use App\ReadModel\User\UserFetcher;
 use App\Security\LoginFormAuthenticator;
@@ -18,15 +19,15 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class SignUpController extends AbstractController
 {
-    private $logger;
+    private $errors;
     /**
      * @var UserFetcher
      */
     private $users;
 
-    public function __construct(UserFetcher $users, LoggerInterface $logger)
+    public function __construct(UserFetcher $users, ErrorHandler $errors)
     {
-        $this->logger = $logger;
+        $this->errors = $errors;
         $this->users = $users;
     }
 
@@ -47,7 +48,7 @@ class SignUpController extends AbstractController
                 $this->addFlash('success', 'Check your email.');
                 return $this->redirectToRoute('home');
             } catch (DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -90,7 +91,7 @@ class SignUpController extends AbstractController
                 'main'
             );
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('auth.signup');
         }

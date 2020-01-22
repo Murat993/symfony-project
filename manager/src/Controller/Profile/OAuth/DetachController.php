@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Profile\OAuth;
 
 
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\Network\Detach\Command;
 use App\Model\User\UseCase\Network\Detach\Handler;
 use DomainException;
@@ -18,11 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DetachController extends AbstractController
 {
-    private $logger;
+    private $errors;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errors)
     {
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -47,7 +48,7 @@ class DetachController extends AbstractController
             $handler->handle($command);
             return $this->redirectToRoute('profile');
         } catch (DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('profile');
         }
