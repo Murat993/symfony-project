@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Task;
 
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
-use App\Model\Work\Entity\Members\Member\Id as MemberId;
 
 /**
  * @ORM\Entity()
@@ -21,6 +22,8 @@ class Task
     /**
      * @var Id
      * @ORM\Column(type="work_projects_task_id")
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="work_projects_tasks_seq", initialValue=1)
      * @ORM\Id
      */
     private $id;
@@ -131,6 +134,17 @@ class Task
         $this->content = $content;
     }
 
+    public function start(\DateTimeImmutable $date): void
+    {
+        if (!$this->isNew()) {
+            throw new \DomainException('Task is already started.');
+        }
+        if (!$this->executors->count()) {
+            throw new \DomainException('Task does not contain executors.');
+        }
+        $this->changeStatus(Status::working(), $date);
+    }
+
     public function setChildOf(?Task $parent): void
     {
         if ($parent) {
@@ -204,17 +218,6 @@ class Task
         $this->priority = $priority;
     }
 
-    public function start(\DateTimeImmutable $date): void
-    {
-        if (!$this->isNew()) {
-            throw new \DomainException('Task is already started.');
-        }
-        if (!$this->executors->count()) {
-            throw new \DomainException('Task does not contain executors.');
-        }
-        $this->changeStatus(Status::working(), $date);
-    }
-
     public function hasExecutor(MemberId $id): bool
     {
         foreach ($this->executors as $executor) {
@@ -274,6 +277,11 @@ class Task
         return $this->date;
     }
 
+    public function getPlanDate(): ?\DateTimeImmutable
+    {
+        return $this->planDate;
+    }
+
     public function getStartDate(): ?\DateTimeImmutable
     {
         return $this->startDate;
@@ -282,11 +290,6 @@ class Task
     public function getEndDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
-    }
-
-    public function getPlanDate(): ?\DateTimeImmutable
-    {
-        return $this->planDate;
     }
 
     public function getName(): string
