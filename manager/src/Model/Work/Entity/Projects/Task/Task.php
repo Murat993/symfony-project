@@ -25,6 +25,8 @@ class Task
     private $parent;
     private $status;
     private $executors;
+    private $startDate;
+    private $endDate;
 
     public function __construct(
         Id $id,
@@ -92,14 +94,22 @@ class Task
         $this->type = $type;
     }
 
-    public function changeStatus(Status $status): void
+    public function changeStatus(Status $status, \DateTimeImmutable $date): void
     {
         if ($this->status->isEqual($status)) {
             throw new \DomainException('Status is already same.');
         }
         $this->status = $status;
-        if ($status->isDone() && $this->progress !== 100) {
-            $this->changeProgress(100);
+        if (!$status->isNew() && !$this->startDate) {
+            $this->startDate = $date;
+        }
+        if ($status->isDone()) {
+            if ($this->progress !== 100) {
+                $this->changeProgress(100);
+            }
+            $this->endDate = $date;
+        } else {
+            $this->endDate = null;
         }
     }
 
@@ -119,6 +129,17 @@ class Task
             throw new \DomainException('Priority is already same.');
         }
         $this->priority = $priority;
+    }
+
+    public function start(\DateTimeImmutable $date): void
+    {
+        if (!$this->isNew()) {
+            throw new \DomainException('Task is already started.');
+        }
+        if (!$this->executors->count()) {
+            throw new \DomainException('Task does not contain executors.');
+        }
+        $this->changeStatus(Status::working(), $date);
     }
 
     public function hasExecutor(MemberId $id): bool
@@ -155,6 +176,10 @@ class Task
         return $this->status->isNew();
     }
 
+    public function isWorking(): bool
+    {
+        return $this->status->isWorking();
+    }
 
     public function getId(): Id
     {
@@ -174,6 +199,16 @@ class Task
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
+    }
+
+    public function getStartDate(): ?\DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function getEndDate(): ?\DateTimeImmutable
+    {
+        return $this->endDate;
     }
 
     public function getPlanDate(): ?\DateTimeImmutable
