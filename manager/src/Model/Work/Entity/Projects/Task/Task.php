@@ -6,6 +6,8 @@ namespace App\Model\Work\Entity\Projects\Task;
 
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
+use Doctrine\Common\Collections\ArrayCollection;
+use Webmozart\Assert\Assert;
 
 class Task
 {
@@ -13,13 +15,15 @@ class Task
     private $project;
     private $author;
     private $date;
-    private $name;
     private $planDate;
+    private $name;
     private $content;
     private $type;
     private $progress;
     private $priority;
     private $parent;
+    private $status;
+    private $executors;
 
     public function __construct(
         Id $id,
@@ -41,6 +45,7 @@ class Task
         $this->progress = 0;
         $this->type = $type;
         $this->priority = $priority;
+        $this->status = Status::new();
     }
 
     public function edit(string $name, ?string $content): void
@@ -64,6 +69,11 @@ class Task
         $this->parent = $parent;
     }
 
+    public function plan(?\DateTimeImmutable $date): void
+    {
+        $this->planDate = $date;
+    }
+
     public function move(Project $project): void
     {
         if ($project === $this->project) {
@@ -72,10 +82,45 @@ class Task
         $this->project = $project;
     }
 
-    public function plan(?\DateTimeImmutable $date): void
+    public function changeType(Type $type): void
     {
-        $this->planDate = $date;
+        if ($this->type->isEqual($type)) {
+            throw new \DomainException('Type is already same.');
+        }
+        $this->type = $type;
     }
+
+    public function changeStatus(Status $status): void
+    {
+        if ($this->status->isEqual($status)) {
+            throw new \DomainException('Status is already same.');
+        }
+        $this->status = $status;
+    }
+
+    public function changeProgress(int $progress): void
+    {
+        Assert::range($progress, 0, 100);
+        if ($progress === $this->progress) {
+            throw new \DomainException('Progress is already same.');
+        }
+        $this->progress = $progress;
+    }
+
+    public function changePriority(int $priority): void
+    {
+        Assert::range($priority, 1, 4);
+        if ($priority === $this->priority) {
+            throw new \DomainException('Priority is already same.');
+        }
+        $this->priority = $priority;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->status->isNew();
+    }
+
 
     public function getId(): Id
     {
@@ -130,5 +175,10 @@ class Task
     public function getParent(): ?Task
     {
         return $this->parent;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
     }
 }
