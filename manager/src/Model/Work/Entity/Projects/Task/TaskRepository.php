@@ -20,6 +20,15 @@ class TaskRepository
         $this->repo = $em->getRepository(Task::class);
     }
 
+    /**
+     * @param Id $id
+     * @return Task[]
+     */
+    public function allByParent(Id $id): array
+    {
+        return $this->repo->findBy(['parent' => $id->getValue()]);
+    }
+
     public function get(Id $id): Task
     {
         /** @var Task $task */
@@ -32,6 +41,11 @@ class TaskRepository
     public function add(Task $task): void
     {
         $this->em->persist($task);
+    }
+
+    public function remove(Task $task): void
+    {
+        $this->em->remove($task);
     }
 
     public function nextId(): Id
