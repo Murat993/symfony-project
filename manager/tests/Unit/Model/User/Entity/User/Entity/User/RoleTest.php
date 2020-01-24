@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Model\User\Entity\User;
 
+use App\Model\User\Entity\User\Role;
 use App\Tests\Builder\User\UserBuilder;
 use PHPUnit\Framework\TestCase;
 
-class BlockTest extends TestCase
+class RoleTest extends TestCase
 {
     public function testSuccess(): void
     {
         $user = (new UserBuilder())->viaEmail()->build();
 
-        $user->block();
+        $user->changeRole(Role::admin());
 
-        self::assertFalse($user->isActive());
-        self::assertTrue($user->isBlocked());
+        self::assertFalse($user->getRole()->isUser());
+        self::assertTrue($user->getRole()->isAdmin());
     }
 
     public function testAlready(): void
     {
         $user = (new UserBuilder())->viaEmail()->build();
 
-        $user->block();
+        $this->expectExceptionMessage('Role is already same.');
 
-        $this->expectExceptionMessage('User is already blocked.');
-        $user->block();
+        $user->changeRole(Role::user());
     }
 }

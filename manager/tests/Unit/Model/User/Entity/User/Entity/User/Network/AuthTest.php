@@ -1,23 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Model\User\Entity\User\Network;
-
 
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Network;
 use App\Model\User\Entity\User\User;
-use App\Tests\Builder\User\UserBuilder;
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class AuthTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $user = (new UserBuilder())->build();
-
         $user = User::signUpByNetwork(
             $id = Id::next(),
             $date = new \DateTimeImmutable(),
@@ -25,6 +21,7 @@ class AuthTest extends TestCase
             $network = 'vk',
             $identity = '0000001'
         );
+
         self::assertTrue($user->isActive());
 
         self::assertEquals($id, $user->getId());
