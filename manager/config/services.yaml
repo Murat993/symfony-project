@@ -73,3 +73,5 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Session:
         alias: Symfony\Component\HttpFoundation\Session\SessionInterface
+
+    cebe\markdown\MarkdownExtra:
