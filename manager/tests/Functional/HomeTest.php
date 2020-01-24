@@ -20,7 +20,7 @@ class HomeTest extends WebTestCase
     {
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@app.test',
-            'PHP_AUTH_PW' => 'password',
+            'PHP_AUTH_PW' => '123123',
         ]);
         $crawler = $client->request('GET', '/');
         $this->assertSame(200, $client->getResponse()->getStatusCode());
