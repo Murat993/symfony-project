@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional;
+namespace App\Tests\Functional\Users;
 
+use App\Tests\Functional\AuthFixture;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class HomeTest extends WebTestCase
+class IndexTest extends WebTestCase
 {
     public function testGuest(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/');
+        $client->request('GET', '/users');
 
         $this->assertSame(302, $client->getResponse()->getStatusCode());
         $this->assertSame('http://localhost/login', $client->getResponse()->headers->get('Location'));
@@ -20,18 +21,17 @@ class HomeTest extends WebTestCase
     public function testUser(): void
     {
         $client = static::createClient([], AuthFixture::userCredentials());
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/users');
 
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Home', $crawler->filter('title')->text());
+        $this->assertSame(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdmin(): void
     {
         $client = static::createClient([], AuthFixture::adminCredentials());
-        $crawler = $client->request('GET', '/');
+        $crawler = $client->request('GET', '/users');
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Home', $crawler->filter('title')->text());
+        $this->assertContains('Users', $crawler->filter('title')->text());
     }
 }

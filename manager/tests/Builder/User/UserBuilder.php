@@ -1,39 +1,36 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Builder\User;
 
-
 use App\Model\User\Entity\User\Email;
-use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
+use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
-use DateTimeImmutable;
+use App\Model\User\Entity\User\Id;
 
 class UserBuilder
 {
     private $id;
     private $date;
+    private $name;
+
     private $email;
     private $hash;
     private $token;
+    private $confirmed;
+
     private $network;
     private $identity;
-    private $confirmed;
-    private $name;
+
+    private $role;
 
     public function __construct()
     {
         $this->id = Id::next();
-        $this->date = new DateTimeImmutable();
+        $this->date = new \DateTimeImmutable();
         $this->name = new Name('First', 'Last');
-    }
-
-    public function confirmed(): self
-    {
-        $clone = clone $this;
-        $clone->confirmed = true;
-        return $clone;
     }
 
     public function viaEmail(Email $email = null, string $hash = null, string $token = null): self
@@ -45,6 +42,13 @@ class UserBuilder
         return $clone;
     }
 
+    public function confirmed(): self
+    {
+        $clone = clone $this;
+        $clone->confirmed = true;
+        return $clone;
+    }
+
     public function viaNetwork(string $network = null, string $identity = null): self
     {
         $clone = clone $this;
@@ -53,8 +57,31 @@ class UserBuilder
         return $clone;
     }
 
+    public function withId(Id $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
+    }
+
+    public function withName(Name $name): self
+    {
+        $clone = clone $this;
+        $clone->name = $name;
+        return $clone;
+    }
+
+    public function withRole(Role $role): self
+    {
+        $clone = clone $this;
+        $clone->role = $role;
+        return $clone;
+    }
+
     public function build(): User
     {
+        $user = null;
+
         if ($this->email) {
             $user = User::signUpByEmail(
                 $this->id,
@@ -68,13 +95,10 @@ class UserBuilder
             if ($this->confirmed) {
                 $user->confirmSignUp();
             }
-
-            return $user;
         }
 
-
         if ($this->network) {
-            return User::signUpByNetwork(
+            $user = User::signUpByNetwork(
                 $this->id,
                 $this->date,
                 $this->name,
@@ -82,6 +106,15 @@ class UserBuilder
                 $this->identity
             );
         }
-        throw new \BadMethodCallException('Specify via method.');
+
+        if (!$user) {
+            throw new \BadMethodCallException('Specify via method.');
+        }
+
+        if ($this->role) {
+            $user->changeRole($this->role);
+        }
+
+        return $user;
     }
 }
