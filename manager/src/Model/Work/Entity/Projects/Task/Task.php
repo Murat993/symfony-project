@@ -8,6 +8,9 @@ use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Model\Work\Entity\Projects\Task\File\File;
+use App\Model\Work\Entity\Projects\Task\File\Id as FileId;
+use App\Model\Work\Entity\Projects\Task\File\Info;
 use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
 
@@ -70,6 +73,12 @@ class Task
      */
     private $content;
     /**
+     * @var ArrayCollection|File[]
+     * @ORM\OneToMany(targetEntity="App\Model\Work\Entity\Projects\Task\File\File", mappedBy="task", orphanRemoval=true, cascade={"all"})
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $files;
+    /**
      * @var Type
      * @ORM\Column(type="work_projects_task_type", length=16)
      */
@@ -125,6 +134,7 @@ class Task
         $this->type = $type;
         $this->priority = $priority;
         $this->status = Status::new();
+        $this->files = new ArrayCollection();
         $this->executors = new ArrayCollection();
     }
 
@@ -247,6 +257,22 @@ class Task
         throw new \DomainException('Executor is not assigned.');
     }
 
+    public function addFile(FileId $id, Member $member, \DateTimeImmutable $date, Info $info): void
+    {
+        $this->files->add(new File($this, $id, $member, $date, $info));
+    }
+
+    public function removeFile(FileId $id): void
+    {
+        foreach ($this->files as $current) {
+            if ($current->getId()->isEqual($id)) {
+                $this->files->removeElement($current);
+                return;
+            }
+        }
+        throw new \DomainException('File is not found.');
+    }
+
     public function isNew(): bool
     {
         return $this->status->isNew();
@@ -325,6 +351,14 @@ class Task
     public function getStatus(): Status
     {
         return $this->status;
+    }
+
+    /**
+     * @return File[]
+     */
+    public function getFiles(): array
+    {
+        return $this->files->toArray();
     }
 
     /**
