@@ -33,6 +33,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\ReadModel\Work\Projects\ActionFetcher;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -562,6 +563,7 @@ class TasksController extends AbstractController
      * @param MemberFetcher $members
      * @param TaskFetcher $tasks
      * @param CommentFetcher $comments
+     * @param ActionFetcher $actions
      * @param Status\Handler $statusHandler
      * @param Progress\Handler $progressHandler
      * @param Type\Handler $typeHandler
@@ -575,6 +577,7 @@ class TasksController extends AbstractController
         MemberFetcher $members,
         TaskFetcher $tasks,
         CommentFetcher $comments,
+        ActionFetcher $actions,
         Status\Handler $statusHandler,
         Progress\Handler $progressHandler,
         Type\Handler $typeHandler,
@@ -664,6 +667,7 @@ class TasksController extends AbstractController
             'member' => $member,
             'children' => $tasks->childrenOf($task->getId()->getValue()),
             'comments' => $comments->allForTask($task->getId()->getValue()),
+            'actions' => $actions->allForTask($task->getId()->getValue()),
             'statusForm' => $statusForm->createView(),
             'progressForm' => $progressForm->createView(),
             'typeForm' => $typeForm->createView(),
