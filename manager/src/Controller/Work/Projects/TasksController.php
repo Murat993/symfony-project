@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\ReadModel\Work\Projects\Action\ActionFetcher;
+use App\ReadModel\Work\Projects\Action\Feed\Feed;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -661,13 +662,17 @@ class TasksController extends AbstractController
             }
         }
 
+        $feed = new Feed(
+            $actions->allForTask($task->getId()->getValue()),
+            $comments->allForTask($task->getId()->getValue())
+        );
+
         return $this->render('app/work/projects/tasks/show.html.twig', [
             'project' => $task->getProject(),
             'task' => $task,
             'member' => $member,
             'children' => $tasks->childrenOf($task->getId()->getValue()),
-            'comments' => $comments->allForTask($task->getId()->getValue()),
-            'actions' => $actions->allForTask($task->getId()->getValue()),
+            'feed' => $feed,
             'statusForm' => $statusForm->createView(),
             'progressForm' => $progressForm->createView(),
             'typeForm' => $typeForm->createView(),
