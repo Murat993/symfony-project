@@ -36,6 +36,7 @@ class Handler
 
         $parent = $command->parent ? $this->tasks->get(new Id($command->parent)) : null;
         $date = new \DateTimeImmutable();
+        $tasks = [];
 
         foreach ($command->names as $name) {
             $task = new Task(
@@ -57,8 +58,10 @@ class Handler
             }
 
             $this->tasks->add($task);
+
+            $tasks[] = $task;
         }
 
-        $this->flusher->flush();
+        $this->flusher->flush(...$tasks);
     }
 }
