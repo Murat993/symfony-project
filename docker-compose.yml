@@ -21,6 +21,7 @@ services:
       - manager-redis
       - storage
       - mailer
+      - manager-queue-redis
   manager-php-cli:
     build:
       context: ./manager/docker/development
@@ -33,6 +34,7 @@ services:
       - manager-redis
       - storage
       - mailer
+      - manager-queue-redis
   manager-node-watch:
     image: node:11.13-alpine
     volumes:
@@ -81,8 +83,27 @@ services:
     image: mailhog/mailhog
     ports:
       - "8082:8025"
+  manager-queue-worker:
+    build:
+      context: ./manager/docker/development
+      dockerfile: php-cli.docker
+    volumes:
+      - ./manager:/app
+      - composer:/root/.composer/cache
+    depends_on:
+      - manager-postgres
+      - manager-redis
+      - manager-queue-redis
+      - storage
+      - mailer
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && php bin/console messenger:consume async -vv"
+  manager-queue-redis:
+    image: redis:5.0-alpine
+    volumes:
+      - manager-queue-redis:/data
 
 volumes:
   manager-postgres:
   manager-redis:
   composer:
+  manager-queue-redis:
