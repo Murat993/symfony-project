@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
+
+//     @Route(".{_format}", name="home", methods={"GET"}, defaults={"_format":"json"})
     /**
      * @Route("", name="home", methods={"GET"})
      * @return Response
