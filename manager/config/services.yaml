@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -20,8 +21,8 @@ services:
     App\Model\User\Entity\User\UserRepository: ~
     App\Model\Work\Entity\Members\Group\GroupRepository: ~
     App\Model\Work\Entity\Members\Member\MemberRepository: ~
-    App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
     App\Model\Work\Entity\Projects\Role\RoleRepository: ~
+    App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
     App\Model\Work\Entity\Projects\Task\TaskRepository: ~
 
     # controllers are imported separately to make sure services can be injected
