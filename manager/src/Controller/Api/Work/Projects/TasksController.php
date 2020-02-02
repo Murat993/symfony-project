@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/work/projects/tasks", name="work.projects.tasks")
+ * @Route("/work/tasks", name="work.tasks")
  */
 class TasksController extends AbstractController
 {
