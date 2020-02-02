@@ -23,4 +23,11 @@ class GroupBuilder
             $this->name
         );
     }
+
+    public function withName(string $name): self
+    {
+        $clone = clone $this;
+        $clone->name = $name;
+        return $clone;
+    }
 }

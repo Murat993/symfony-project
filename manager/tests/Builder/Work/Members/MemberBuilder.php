@@ -14,9 +14,11 @@ class MemberBuilder
 {
     private $name;
     private $email;
+    private $id;
 
     public function __construct()
     {
+        $this->id = Id::next();
         $this->name = new Name('First', 'Last');
         $this->email = new Email('member@app.test');
     }
@@ -24,10 +26,24 @@ class MemberBuilder
     public function build(Group $group): Member
     {
         return new Member(
-            Id::next(),
+            $this->id,
             $group,
             $this->name,
             $this->email
         );
+    }
+
+    public function withId(Id $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
+    }
+
+    public function withEmail(Email $email): self
+    {
+        $clone = clone $this;
+        $clone->email = $email;
+        return $clone;
     }
 }
