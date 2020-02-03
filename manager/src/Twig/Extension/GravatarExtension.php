@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Twig\Extension;
 
+use App\Service\Gravatar;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
