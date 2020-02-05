@@ -29,7 +29,11 @@ class Role
      * @ORM\Column(type="work_projects_role_permissions")
      */
     private $permissions;
-
+    /**
+     * @ORM\Version()
+     * @ORM\Column(type="integer")
+     */
+    private $version;
     /**
      * Role constructor.
      * @param Id $id
